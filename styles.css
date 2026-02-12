@@ -1,0 +1,96 @@
+:root {
+  color-scheme: light;
+  --bg: #f6f8fb;
+  --card: #ffffff;
+  --text: #1b2a41;
+  --accent: #1f7a8c;
+  --accent-hover: #155d6a;
+  --border: #dce3eb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.container {
+  max-width: 880px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+h1 {
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  margin-top: 0;
+  color: #475569;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: 0 5px 20px rgba(15, 23, 42, 0.06);
+  margin-bottom: 1rem;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  margin: 0.75rem 0 0.4rem;
+}
+
+select,
+textarea,
+button {
+  width: 100%;
+  font-size: 1rem;
+  border-radius: 10px;
+}
+
+select,
+textarea {
+  border: 1px solid var(--border);
+  padding: 0.7rem;
+}
+
+textarea {
+  resize: vertical;
+}
+
+button {
+  margin-top: 0.9rem;
+  border: 0;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  padding: 0.8rem;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--accent-hover);
+}
+
+.results ol {
+  padding-left: 1.3rem;
+  margin-bottom: 0;
+}
+
+.results li {
+  margin-bottom: 0.4rem;
+}
+
+#emptyState {
+  margin: 0;
+  color: #64748b;
+}

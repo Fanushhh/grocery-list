@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ro">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Planificator cumpărături</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Planificator listă de cumpărături</h1>
+      <p class="subtitle">
+        Lipește lista ta, alege supermarket-ul, apoi vezi ordinea optimă a produselor
+        pe traseul din magazin.
+      </p>
+
+      <section class="card">
+        <label for="store">Supermarket</label>
+        <select id="store">
+          <option value="lidl">Lidl</option>
+          <option value="kaufland">Kaufland</option>
+          <option value="carrefour">Carrefour</option>
+        </select>
+
+        <label for="items">Lista de cumpărături (copy/paste)</label>
+        <textarea
+          id="items"
+          rows="10"
+          placeholder="Ex: lapte, pâine, banane, piept de pui, detergent"
+        ></textarea>
+
+        <button id="organizeBtn" type="button">Organizează lista</button>
+      </section>
+
+      <section class="card results">
+        <h2>Ordinea recomandată în magazin</h2>
+        <ol id="orderedList"></ol>
+        <p id="emptyState">Completează lista și apasă pe „Organizează lista”.</p>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
