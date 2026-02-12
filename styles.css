@@ -50,6 +50,7 @@ label {
 }
 
 select,
+input,
 textarea,
 button {
   width: 100%;
@@ -58,6 +59,7 @@ button {
 }
 
 select,
+input,
 textarea {
   border: 1px solid var(--border);
   padding: 0.7rem;
@@ -65,6 +67,18 @@ textarea {
 
 textarea {
   resize: vertical;
+  min-height: 84px;
+}
+
+.input-row {
+  display: flex;
+  gap: 0.6rem;
+}
+
+#addIngredientBtn {
+  width: auto;
+  min-width: 120px;
+  margin-top: 0;
 }
 
 button {
@@ -81,16 +95,266 @@ button:hover {
   background: var(--accent-hover);
 }
 
-.results ol {
-  padding-left: 1.3rem;
-  margin-bottom: 0;
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.8rem;
 }
 
-.results li {
-  margin-bottom: 0.4rem;
+.results-header h2 {
+  margin: 0;
+}
+
+.secondary-btn {
+  width: auto;
+  margin-top: 0;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--border);
+  background: #eef4f7;
+  color: #0f4f5a;
+  font-weight: 600;
+  transition: background 0.15s ease-in-out;
+}
+
+.full-btn {
+  width: 100%;
+  margin-top: 0.7rem;
+}
+
+.secondary-btn:hover:not(:disabled) {
+  background: #dceaf0;
+}
+
+.secondary-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.85rem;
+}
+
+.category-group {
+  border: 1px solid #e5ecf2;
+  border-left: 5px solid var(--category-color, var(--accent));
+  border-radius: 10px;
+  background: var(--category-bg, #fbfdff);
+  padding: 0.65rem;
+  min-width: 0;
+}
+
+.category-header {
+  margin: 0 0 0.45rem;
+  color: var(--category-color, #0f4f5a);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.category-items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item-row {
+  margin: 0;
+  padding: 0.35rem 0;
+  border-bottom: 1px dashed rgba(15, 79, 90, 0.15);
+}
+
+.item-row:last-child {
+  border-bottom: 0;
+}
+
+.item-top {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.item-name {
+  font-weight: 600;
+  color: var(--category-color, var(--text));
+  word-break: break-word;
+}
+
+.item-qty {
+  background: #dceaf0;
+  color: #0f4f5a;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.2rem 0.5rem;
+}
+
+.remove-item-btn {
+  width: auto;
+  margin-top: 0;
+  margin-left: auto;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid #fecaca;
+  border-radius: 999px;
+  background: #fff1f2;
+  color: #b42318;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.remove-item-btn:hover {
+  background: #ffe4e6;
+}
+
+.category-fructe {
+  --category-color: #de7a14;
+  --category-bg: #fff7ed;
+}
+
+.category-legume {
+  --category-color: #2f855a;
+  --category-bg: #effaf4;
+}
+
+.category-panificatie {
+  --category-color: #a16207;
+  --category-bg: #fffbeb;
+}
+
+.category-lactate {
+  --category-color: #2563eb;
+  --category-bg: #eff6ff;
+}
+
+.category-branzeturi {
+  --category-color: #7c3aed;
+  --category-bg: #f5f3ff;
+}
+
+.category-carne {
+  --category-color: #b42318;
+  --category-bg: #fff1f2;
+}
+
+.category-congelate {
+  --category-color: #0e7490;
+  --category-bg: #ecfeff;
+}
+
+.category-paste-si-orez {
+  --category-color: #7c3f00;
+  --category-bg: #fff7ed;
+}
+
+.category-conserve {
+  --category-color: #6b7280;
+  --category-bg: #f8fafc;
+}
+
+.category-mic-dejun {
+  --category-color: #b7791f;
+  --category-bg: #fffaf0;
+}
+
+.category-snacks {
+  --category-color: #c2410c;
+  --category-bg: #fff7ed;
+}
+
+.category-dulciuri {
+  --category-color: #be185d;
+  --category-bg: #fdf2f8;
+}
+
+.category-bauturi {
+  --category-color: #0369a1;
+  --category-bg: #f0f9ff;
+}
+
+.category-condimente {
+  --category-color: #b45309;
+  --category-bg: #fffbeb;
+}
+
+.category-sosuri {
+  --category-color: #9a3412;
+  --category-bg: #fff7ed;
+}
+
+.category-curatenie {
+  --category-color: #0f766e;
+  --category-bg: #f0fdfa;
+}
+
+.category-igiena {
+  --category-color: #be185d;
+  --category-bg: #fdf2f8;
+}
+
+.category-casa {
+  --category-color: #374151;
+  --category-bg: #f8fafc;
+}
+
+.category-bebe {
+  --category-color: #9333ea;
+  --category-bg: #faf5ff;
+}
+
+.category-animale {
+  --category-color: #7c2d12;
+  --category-bg: #fff7ed;
+}
+
+.category-farmacie {
+  --category-color: #0f766e;
+  --category-bg: #ecfdf5;
+}
+
+.category-diverse {
+  --category-color: #475569;
+  --category-bg: #f8fafc;
 }
 
 #emptyState {
   margin: 0;
   color: #64748b;
+}
+
+.copy-feedback {
+  margin: 0.55rem 0 0;
+  min-height: 1.2rem;
+  color: #3f5e72;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+  .results-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .secondary-btn {
+    width: 100%;
+  }
+
+  .results-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .input-row {
+    flex-direction: column;
+  }
+
+  #addIngredientBtn {
+    width: 100%;
+    min-width: 0;
+  }
 }

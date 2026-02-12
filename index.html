@@ -3,15 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Planificator cumpărături</title>
+    <title>Planificator cumparaturi</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="container">
-      <h1>Planificator listă de cumpărături</h1>
+      <h1>Planificator lista de cumparaturi</h1>
       <p class="subtitle">
-        Lipește lista ta, alege supermarket-ul, apoi vezi ordinea optimă a produselor
-        pe traseul din magazin.
+        Alege supermarket-ul, adauga ingredientele unul cate unul sau lipeste o lista rapida,
+        apoi vezi ordinea optima pe traseul din magazin.
       </p>
 
       <section class="card">
@@ -22,20 +22,33 @@
           <option value="carrefour">Carrefour</option>
         </select>
 
-        <label for="items">Lista de cumpărături (copy/paste)</label>
-        <textarea
-          id="items"
-          rows="10"
-          placeholder="Ex: lapte, pâine, banane, piept de pui, detergent"
-        ></textarea>
+        <label for="ingredientInput">Ingredient</label>
+        <div class="input-row">
+          <input
+            id="ingredientInput"
+            type="text"
+            placeholder='Ex: iaurt grecesc (lactate) sau cafea boabe (500g)'
+          />
+          <button id="addIngredientBtn" type="button">Adauga</button>
+        </div>
 
-        <button id="organizeBtn" type="button">Organizează lista</button>
+        <label for="bulkInput">Lista rapida (virgula, ; sau rand nou)</label>
+        <textarea
+          id="bulkInput"
+          rows="4"
+          placeholder="Ex: apa, oua, orez, ton conserva, detergent vase"
+        ></textarea>
+        <button id="addBulkBtn" class="secondary-btn full-btn" type="button">Adauga lista</button>
       </section>
 
       <section class="card results">
-        <h2>Ordinea recomandată în magazin</h2>
-        <ol id="orderedList"></ol>
-        <p id="emptyState">Completează lista și apasă pe „Organizează lista”.</p>
+        <div class="results-header">
+          <h2>Ordinea recomandata in magazin</h2>
+          <button id="copyBtn" class="secondary-btn" type="button" disabled>Copiaza lista</button>
+        </div>
+        <div id="orderedList" class="results-grid"></div>
+        <p id="emptyState">Adauga ingrediente pentru a genera lista organizata.</p>
+        <p id="copyFeedback" class="copy-feedback" aria-live="polite"></p>
       </section>
     </main>
 
