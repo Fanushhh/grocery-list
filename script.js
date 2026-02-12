@@ -9,19 +9,19 @@ const categoryMatchers = [
   { category: "legume", keywords: ["rosii", "castrav", "salata", "morcov", "ceapa", "cartof", "ardei", "legume"] },
   { category: "panificatie", keywords: ["paine", "bagheta", "covrig", "toast", "faina", "cozonac"] },
   { category: "lactate", keywords: ["lapte", "iaurt", "smantana", "unt", "branza", "telemea", "kefir"] },
-  { category: "branzeturi", keywords: ["parmezan", "mozzarella", "gouda", "brie"] },
-  { category: "carne", keywords: ["pui", "porc", "vita", "somon", "peste", "sunca", "mezel", "oua"] },
-  { category: "congelate", keywords: ["congel", "inghetata", "pizza", "mix mexican"] },
+  { category: "branzeturi", keywords: ["parmezan", "mozzarella", "gouda", "brie", "telemea", "feta"] },
+  { category: "carne", keywords: ["pui", "porc", "vita", "somon", "peste", "sunca", "mezel", "oua", "piept de pui", "cotlet", "pulpe de pui"] },
+  { category: "congelate", keywords: ["congel", "inghetata", "pizza", "mix mexican", "legume cu unt", "foietaj", "fructe congelate"] },
   { category: "bauturi", keywords: ["apa", "suc", "bere", "vin", "cafea", "ceai"] },
   { category: "paste si orez", keywords: ["paste", "spaghete", "penne", "fusilli", "orez", "bulgur", "couscous"] },
   { category: "conserve", keywords: ["conserva", "ton", "fasole la conserva", "porumb la conserva", "sardine", "mazare conserva"] },
   { category: "mic dejun", keywords: ["cereale", "musli", "ovaz", "fulgi", "granola", "gem", "miere"] },
   { category: "snacks", keywords: ["chips", "alune", "seminte", "covrigei", "nachos", "snack"] },
   { category: "dulciuri", keywords: ["ciocolata", "biscuiti", "prajitura", "napolitane", "bomboane", "inghetata"] },
-  { category: "condimente", keywords: ["sare", "piper", "boia", "oregano", "busuioc", "condiment", "curry"] },
-  { category: "sosuri", keywords: ["ketchup", "maioneza", "mustar", "sos", "otet", "ulei de masline"] },
+  { category: "condimente", keywords: ["sare", "piper", "boia", "oregano", "busuioc", "condiment", "curry", "cimbru", "rozmarin", "delicat", "usturoi pudra", "ceapa pudra"] },
+  { category: "sosuri", keywords: ["ketchup", "maioneza", "mustar", "sos", "otet", "ulei de masline", "sos de soia", "barbeque"] },
   { category: "curatenie", keywords: ["detergent", "clor", "dezinfect", "burete", "saci menajeri"] },
-  { category: "igiena", keywords: ["sapun", "sampon", "deodorant", "hartie igienica", "hartie", "prosoape", "pasta de dinti"] },
+  { category: "igiena", keywords: ["sapun", "sampon", "deodorant", "hartie igienica", "prosoape", "pasta de dinti"] },
   { category: "casa", keywords: ["folie aluminiu", "servetele", "bec", "hartie copt"] },
   { category: "bebe", keywords: ["scutece", "servetele umede", "formula lapte", "biberon", "piure bebe"] },
   { category: "animale", keywords: ["pisica", "caine", "hrana", "nisip"] },
@@ -40,6 +40,7 @@ const copyFeedback = document.getElementById("copyFeedback");
 
 let shoppingItems = [];
 let latestOrderedItems = [];
+let draggedItemName = null;
 
 function normalizeText(text) {
   return text
@@ -141,7 +142,21 @@ function categorizeItem(itemName, categoryHint = null) {
   const normalizedItem = normalizeText(itemName);
 
   for (const matcher of categoryMatchers) {
-    if (matcher.keywords.some((keyword) => normalizedItem.includes(keyword))) {
+    const isMatch = matcher.keywords.some((keyword) => {
+      const normalizedKeyword = normalizeText(keyword);
+      if (!normalizedKeyword) {
+        return false;
+      }
+
+      if (normalizedKeyword.length <= 3) {
+        const wholeWordPattern = new RegExp(`(^|\\s)${escapeRegExp(normalizedKeyword)}(\\s|$)`);
+        return wholeWordPattern.test(normalizedItem);
+      }
+
+      return normalizedItem.includes(normalizedKeyword);
+    });
+
+    if (isMatch) {
       return matcher.category;
     }
   }
@@ -218,6 +233,7 @@ function renderResults(orderedItems) {
     const categorySection = document.createElement("section");
     categorySection.className = "category-group";
     categorySection.classList.add(getCategoryClassName(category));
+    categorySection.dataset.category = category;
 
     const header = document.createElement("h3");
     header.className = "category-header";
@@ -231,6 +247,9 @@ function renderResults(orderedItems) {
       const li = document.createElement("li");
       li.className = "item-row";
       li.classList.add(getCategoryClassName(item.category));
+      li.draggable = true;
+      li.dataset.normalizedName = item.normalizedName;
+      li.dataset.category = item.category;
 
       const topRow = document.createElement("div");
       topRow.className = "item-top";
@@ -355,6 +374,26 @@ function removeOneItem(normalizedName) {
   refreshResults();
 }
 
+function moveItemToCategory(normalizedName, targetCategory) {
+  let wasUpdated = false;
+
+  shoppingItems = shoppingItems.map((entry) => {
+    if (normalizeText(entry.name) !== normalizedName) {
+      return entry;
+    }
+
+    wasUpdated = true;
+    return {
+      ...entry,
+      categoryHint: targetCategory
+    };
+  });
+
+  if (wasUpdated) {
+    refreshResults();
+  }
+}
+
 addIngredientBtn.addEventListener("click", addIngredient);
 addBulkBtn.addEventListener("click", addBulkItems);
 
@@ -389,6 +428,94 @@ orderedList.addEventListener("click", (event) => {
   }
 
   removeOneItem(normalizedName);
+});
+
+orderedList.addEventListener("dragstart", (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLElement) || !target.classList.contains("item-row")) {
+    return;
+  }
+
+  const { normalizedName } = target.dataset;
+  if (!normalizedName) {
+    return;
+  }
+
+  draggedItemName = normalizedName;
+  target.classList.add("is-dragging");
+
+  if (event.dataTransfer) {
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text/plain", normalizedName);
+  }
+});
+
+orderedList.addEventListener("dragend", () => {
+  draggedItemName = null;
+  orderedList.querySelectorAll(".category-group.is-drop-target").forEach((el) => {
+    el.classList.remove("is-drop-target");
+  });
+  orderedList.querySelectorAll(".item-row.is-dragging").forEach((el) => {
+    el.classList.remove("is-dragging");
+  });
+});
+
+orderedList.addEventListener("dragover", (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) {
+    return;
+  }
+
+  const categoryGroup = target.closest(".category-group");
+  if (!categoryGroup || !(categoryGroup instanceof HTMLElement)) {
+    return;
+  }
+
+  event.preventDefault();
+  categoryGroup.classList.add("is-drop-target");
+});
+
+orderedList.addEventListener("dragleave", (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) {
+    return;
+  }
+
+  const categoryGroup = target.closest(".category-group");
+  if (!categoryGroup || !(categoryGroup instanceof HTMLElement)) {
+    return;
+  }
+
+  if (!categoryGroup.contains(event.relatedTarget)) {
+    categoryGroup.classList.remove("is-drop-target");
+  }
+});
+
+orderedList.addEventListener("drop", (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) {
+    return;
+  }
+
+  const categoryGroup = target.closest(".category-group");
+  if (!categoryGroup || !(categoryGroup instanceof HTMLElement)) {
+    return;
+  }
+
+  event.preventDefault();
+  categoryGroup.classList.remove("is-drop-target");
+
+  const dropCategory = categoryGroup.dataset.category;
+  if (!draggedItemName || !dropCategory) {
+    return;
+  }
+
+  const draggedItem = latestOrderedItems.find((item) => item.normalizedName === draggedItemName);
+  if (!draggedItem || draggedItem.category === dropCategory) {
+    return;
+  }
+
+  moveItemToCategory(draggedItemName, dropCategory);
 });
 
 storeInput.addEventListener("change", refreshResults);

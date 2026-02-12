@@ -107,6 +107,12 @@ button:hover {
   margin: 0;
 }
 
+.drag-hint {
+  margin: 0 0 0.65rem;
+  color: #5b7082;
+  font-size: 0.88rem;
+}
+
 .secondary-btn {
   width: auto;
   margin-top: 0;
@@ -145,6 +151,12 @@ button:hover {
   background: var(--category-bg, #fbfdff);
   padding: 0.65rem;
   min-width: 0;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.category-group.is-drop-target {
+  box-shadow: 0 0 0 2px var(--category-color, #1f7a8c);
+  transform: translateY(-1px);
 }
 
 .category-header {
@@ -166,10 +178,16 @@ button:hover {
   margin: 0;
   padding: 0.35rem 0;
   border-bottom: 1px dashed rgba(15, 79, 90, 0.15);
+  cursor: grab;
 }
 
 .item-row:last-child {
   border-bottom: 0;
+}
+
+.item-row.is-dragging {
+  opacity: 0.45;
+  cursor: grabbing;
 }
 
 .item-top {
